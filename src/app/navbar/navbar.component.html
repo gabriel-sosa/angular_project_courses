@@ -1,0 +1,10 @@
+<nav>
+  <a routerLink="/"><h2>Courses</h2></a> 
+  <div *ngIf="!userService.getUser()">
+    <a routerLink="/signup">Sign Up</a>
+    <a routerLink="/signin">Sign In</a>
+  </div>
+  <div *ngIf="userService.getUser()">
+    <a (click)="onClick()">Sign Out</a>
+  </div>
+</nav>

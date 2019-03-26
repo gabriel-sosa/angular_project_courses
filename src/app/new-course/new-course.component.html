@@ -1,0 +1,15 @@
+<h1>Create New Course</h1>
+<form [formGroup]="course" (ngSubmit)="onSubmit()">
+
+  <label>
+    Title:
+    <input type="text" name="title" formControlName="title">
+  </label>
+
+  <label>
+    Description:
+    <textarea name="description" cols="30" rows="10" formControlName="description"></textarea>
+  </label>
+
+  <input type="submit" value="Create Course">
+</form>

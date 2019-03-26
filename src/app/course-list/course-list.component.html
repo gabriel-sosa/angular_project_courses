@@ -1,0 +1,8 @@
+<div *ngIf="courses">
+    <div *ngFor="let course of courses">
+        <app-course title={{course.title}} id={{course._id}}></app-course>
+    </div>
+</div>
+<a routerLink="/new">
+    <h3>Create New Course</h3>
+</a>
