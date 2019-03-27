@@ -1,16 +1,20 @@
 <h1>Sign In</h1>
 <form [formGroup]="user" (ngSubmit)="onSubmit()">
   
-    <label>
-      email:
-      <input type="text" name="email" formControlName="email">
-    </label>
+  <label>
+    email:
+    <input type="text" name="email" formControlName="email">
+  </label>
+
+  <label>
+    password:
+    <input type="password" name="password" formControlName="password">
+  </label>
   
-    <label>
-      password:
-      <input type="password" name="password" formControlName="password">
-    </label>
-    
-    <input type="submit" value="sign in">
-    
-  </form> 
+  <input type="submit" value="sign in" [disabled]="user.invalid">
+  
+</form> 
+
+<h3 *ngIf="user.controls.email.invalid && user.controls.email.dirty">Invalid Name</h3>
+<h3 *ngIf="user.controls.password.invalid && user.controls.password.dirty">Invalid Name</h3>
+<h3 *ngIf="customError">{{customError}}</h3>

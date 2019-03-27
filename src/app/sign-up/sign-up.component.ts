@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { UserService } from '../services/user.service'; 
+import { UserService } from '../services/user.service';
+import { validator } from '../validator.function';
 
-function validator(regex: RegExp): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} | null => {
-    const forbidden = regex.test(control.value);
-    return forbidden ? null : {'forbiddenName': {value: control.value}};
-  };
-}
+
 
 @Component({
   selector: 'app-sign-up',
@@ -18,16 +14,18 @@ function validator(regex: RegExp): ValidatorFn {
 })
 export class SignUpComponent implements OnInit {
 
+  customError: String;
+
   user = new FormGroup({
     firstName: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
-      validator(/[A-Za-z]+/)
+      validator(/^[A-Za-z]+$/)
     ]),
     lastName: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
-      validator(/[A-Za-z]+/)
+      validator(/^[A-Za-z]+$/)
     ]),
     emailAddress: new FormControl('', [
       Validators.required,
@@ -50,7 +48,7 @@ export class SignUpComponent implements OnInit {
     if (this.user.valid) {
       this.userService.signUp(this.user.value)
         .then(() => this.router.navigate(['/signin']))
-        .catch(err => alert(err.message));
+        .catch(err => this.customError = err.message);
     }
   }
 

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { UserService } from '../services/user.service';
+import { validator } from '../validator.function'
 
 @Component({
   selector: 'app-sign-in',
@@ -11,9 +12,18 @@ import { UserService } from '../services/user.service';
 })
 export class SignInComponent implements OnInit {
 
+  customError: String;
+
   user = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4),
+      validator(/^.+@.+\..+$/)
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4)
+    ]),
   });
 
   constructor(
@@ -22,9 +32,10 @@ export class SignInComponent implements OnInit {
     ) { }
 
   onSubmit() {
-    this.userService.signIn(this.user.value)
-      .then(() => this.router.navigate(['/']))
-      .catch(err => console.log());
+    if(this.user.valid)
+      this.userService.signIn(this.user.value)
+        .then(() => this.router.navigate(['/']))
+        .catch(err => this.customError = err.message);
   }
 
   ngOnInit() {

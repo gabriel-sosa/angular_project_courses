@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserService } from '../services/user.service';
 import { CourseService } from '../services/course.service';
@@ -12,9 +12,15 @@ import { CourseService } from '../services/course.service';
 })
 export class NewCourseComponent implements OnInit {
 
+  customError: String;
+
   course = new FormGroup({
-    title: new FormControl(''),
-    description: new FormControl(''),
+    title: new FormControl('', [
+      Validators.required
+    ]),
+    description: new FormControl('', [
+      Validators.required
+    ]),
   });
 
   constructor(
@@ -30,9 +36,10 @@ export class NewCourseComponent implements OnInit {
   }
 
   onSubmit(){
-    this.courseService.createCourse(this.course.value)
-      .then(() => this.router.navigate(['/']))
-      .catch(err => console.log(err));
+    if(this.course.valid)
+      this.courseService.createCourse(this.course.value)
+        .then(() => this.router.navigate(['/']))
+        .catch(err => this.customError = err.message);
   }
 
 }
