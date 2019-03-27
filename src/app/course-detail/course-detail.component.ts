@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
-import { CourseService } from '../course.service';
+import { CourseService } from '../services/course.service';
+import { UserService } from '../services/user.service';
+import { User } from '../interfaces/user.interface';
+import { Course } from '../interfaces/course.interface';
 
 @Component({
   selector: 'app-course-detail',
@@ -10,16 +13,28 @@ import { CourseService } from '../course.service';
 })
 export class CourseDetailComponent implements OnInit {
 
-  course: Object;
+  course: Course;
+
+  currentUser: User;
 
   constructor(
     private route: ActivatedRoute,
-    private courseService: CourseService
+    private router: Router,
+    private courseService: CourseService,
+    private userService: UserService
     ) { }
 
   ngOnInit() {
+    this.currentUser = this.userService.getUser();
     this.courseService.getCourse(this.route.snapshot.paramMap.get('id'))
-      .then(data => this.course = data);
+      .then(data => this.course = data)
+      .catch(err => console.log(err));
+  }
+
+  handleDelete() {
+    this.courseService.deleteCourse(this.course._id)
+      .then(() => this.router.navigate(['/']))
+      .catch(err => console.log(err));
   }
 
 }

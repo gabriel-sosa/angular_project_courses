@@ -1,4 +1,9 @@
 <div *ngIf="course">
+  <div *ngIf="currentUser && currentUser.emailAddress === course.user.emailAddress">
+      <a routerLink="/course/{{course._id}}/update">Update</a>
+      <a (click)="handleDelete()">delete</a>
+  </div>
   <h1>{{course.title}}</h1>
-  <h3>{{course.description}}</h3>
+  <h3>by {{course.user.emailAddress}}</h3>
+  <h2>{{course.description}}</h2>
 </div>

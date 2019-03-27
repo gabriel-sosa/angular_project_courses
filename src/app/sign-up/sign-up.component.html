@@ -1,5 +1,5 @@
 <h1>Sign up</h1>
-<form [formGroup]="user" (ngSubmit)="onSubmit()">
+<form [formGroup]="user" (ngSubmit)="onSubmit()" disabled>
   <label>First name:
       <input type="text" name="firstName" formControlName="firstName">
   </label>
@@ -16,6 +16,11 @@
       <input type="password" name="password" formControlName="password">
   </label>
   
-  <input type="submit" value="sign up">
+  <input type="submit" value="sign up" [disabled]="user.invalid">
 
 </form>
+
+<h3 *ngIf="user.controls.firstName.invalid && user.controls.firstName.dirty">Invalid Name</h3>
+<h3 *ngIf="user.controls.lastName.invalid && user.controls.lastName.dirty">Invalid Name</h3>
+<h3 *ngIf="user.controls.emailAddress.invalid && user.controls.emailAddress.dirty">Invalid Name</h3>
+<h3 *ngIf="user.controls.password.invalid && user.controls.password.dirty">Invalid Name</h3>

@@ -1,4 +1,5 @@
-<nav>
+<nav [@openClose]="navbarOpen ?  'open' : 'close' ">
+  <h3 (click)="toggleNavbar()" >>></h3>
   <a routerLink="/"><h2>Courses</h2></a> 
   <div *ngIf="!userService.getUser()">
     <a routerLink="/signup">Sign Up</a>

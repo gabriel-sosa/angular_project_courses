@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ChildActivationStart } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { UserService } from '../user.service';
-import { CourseService } from '../course.service';
+import { UserService } from '../services/user.service';
+import { CourseService } from '../services/course.service';
 
 @Component({
   selector: 'app-new-course',
@@ -30,7 +30,9 @@ export class NewCourseComponent implements OnInit {
   }
 
   onSubmit(){
-    this.courseService.createCourse(this.course.value);
+    this.courseService.createCourse(this.course.value)
+      .then(() => this.router.navigate(['/']))
+      .catch(err => console.log(err));
   }
 
 }

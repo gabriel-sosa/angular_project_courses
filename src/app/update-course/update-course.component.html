@@ -1,0 +1,18 @@
+<h1>Update Course</h1>
+
+<form [formGroup]="course" (ngSubmit)="onSubmit()">
+
+  <input type="hidden" name="id" formControlName="_id">
+
+  <label>
+    Title:
+    <input type="text" name="title" formControlName="title">
+  </label>
+
+  <label>
+    Description:
+    <textarea name="description" cols="30" rows="10" formControlName="description"></textarea>
+  </label>
+
+  <input type="submit" value="Update Course">
+</form>
