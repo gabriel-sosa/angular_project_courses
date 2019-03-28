@@ -40,12 +40,13 @@ export class NewCourseComponent implements OnInit {
   onSubmit(){
     if(this.course.valid && !this.loading){
       this.loading = true;
-      this.courseService.createCourse(this.course.value)
-        .then(() => this.router.navigate(['/']))
-        .catch(err => {
+      this.courseService.createCourse(this.course.value).subscribe(
+        () => this.router.navigate(['/']),
+        err => {
           this.loading = false;
-          this.sanckNar.open(err.message, 'ok');
-        });
+          console.log(err);
+        }
+      );
     }
   }
 

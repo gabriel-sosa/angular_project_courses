@@ -47,11 +47,13 @@ export class SignUpComponent implements OnInit {
     if (this.user.valid && !this.loading) {
       this.loading = true;
       this.userService.signUp(this.user.value)
-        .then(() => this.router.navigate(['/signin']))
-        .catch(err => {
-          this.snackBar.open(err.message, 'ok');
+        .subscribe(
+        () => this.router.navigate(['/signin']),
+        err => {
+          this.snackBar.open(err.error.message, 'ok');
           this.loading = false;
-        });
+        }
+      );
     }
   }
 

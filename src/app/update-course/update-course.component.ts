@@ -40,28 +40,36 @@ export class UpdateCourseComponent implements OnInit {
   ngOnInit() {
     const currentUser = this.userService.getUser();
     this.courseService.getCourse(this.route.snapshot.paramMap.get('id'))
-      .then(data => {
-        if (currentUser && data.user.emailAddress === currentUser.emailAddress)
-          return data;
-        else
-          throw this.router.navigate(['/']);
-      })
-      .then(data => this.course.patchValue({
-        _id: data._id,
-        title: data.title,
-        description: data.description
-      }))
-      .catch(err => err.message && this.snackBar.open(err, 'ok'));
+      .subscribe(
+        data => {
+          if (currentUser && data.user.emailAddress === currentUser.emailAddress)
+           this.course.patchValue({
+              _id: data._id,
+              title: data.title,
+              description: data.description
+            });
+         else
+           throw this.router.navigate(['/']);
+        },
+        err => console.log(err)
+      )
   }
 
   onSubmit() {
     if (this.course.valid && !this.loading) {
-      this.courseService.updateCourse(this.course.value)
-        .then(() => this.router.navigate([`/course/${this.course.value._id}`]))
-        .catch(err => {
-          this.snackBar.open(err.message, 'ok');
+      this.courseService.updateCourse(this.course.value).subscribe(
+        () => this.router.navigate([`/course/${this.course.value._id}`]),
+        err =>{ 
+          this.snackBar.open('error in the sever', 'ok');
           this.loading = false;
-        });
+        }
+      );
+      // this.courseService.updateCourse(this.course.value)
+      //   .then(() => this.router.navigate([`/course/${this.course.value._id}`]))
+      //   .catch(err => {
+      //     this.snackBar.open(err.message, 'ok');
+      //     this.loading = false;
+      //   });
     }
   }
 

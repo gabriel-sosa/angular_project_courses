@@ -34,14 +34,14 @@ export class SignInComponent implements OnInit {
     ) { }
 
   onSubmit() {
-    if(this.user.valid && !this.loading){
-      this.loading = true;
-      this.userService.signIn(this.user.value)
-        .then(() => this.router.navigate(['/']))
-        .catch(err => {
+    if (this.user.valid && !this.loading){
+      this.userService.signIn(this.user.value).subscribe(
+        () => this.router.navigate(['/']),
+        err => {
           this.loading = false;
-          this.snackBar.open(err.message, 'ok');
-        });
+          this.snackBar.open('wrong email or password', 'ok');
+        }
+      )
     }
   }
 

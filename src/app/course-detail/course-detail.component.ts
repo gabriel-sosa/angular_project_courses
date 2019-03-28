@@ -26,15 +26,18 @@ export class CourseDetailComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.userService.getUser();
-    this.courseService.getCourse(this.route.snapshot.paramMap.get('id'))
-      .then(data => this.course = data)
-      .catch(err => console.log(err));
+    this.courseService.getCourse(this.route.snapshot.paramMap.get('id')).subscribe(
+      data => this.course = data,
+      err => console.log(err)
+    )
   }
 
   handleDelete() {
     this.courseService.deleteCourse(this.course._id)
-      .then(() => this.router.navigate(['/']))
-      .catch(err => console.log(err));
+      .subscribe(
+        () => this.router.navigate(['/']),
+        err => console.log(err)
+      );
   }
 
 }

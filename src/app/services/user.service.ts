@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { User } from '../interfaces/user.interface';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,47 +11,40 @@ import { Observable } from 'rxjs';
 
 export class UserService {
 
-  user: User
+  user: any
 
   constructor(private http: HttpClient) { }
 
-  public signIn({email, password}): Promise<any>{
+  public signIn({email, password}): Observable<any>{
     const authorization = 'Basic ' + btoa(`${email}:${password}`);
-    const info = {
-			headers: {
-				Authorization: authorization
-			}
-    };
-    return fetch('https://rest-api-treehouse-project-9.herokuapp.com/api/users', info)
-			.then(data => {
-				if (data.ok)
-					return data.json();
-				else
-					throw new Error('wrong email or password');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': authorization
       })
-      .then(data => {
-        this.user = {
-          info: info,
-          ...data
-        };
-        return data;
-      });
+    };
+    return this.http.get('https://rest-api-treehouse-project-9.herokuapp.com/api/users', httpOptions)
+      .pipe(
+        map(data => 
+          this.user = {
+            info: {
+              headers: {
+                Authorization: authorization
+              },
+            },
+            ...data
+          }
+        )
+      )
   }
 
-  public signUp(body: User): Promise<any> {
-    const info = {
-      method: 'POST', 
-      body: JSON.stringify(body), 
-      headers: {
+  public signUp(body: User): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
         'Content-Type': 'application/json'
-      }
-    };
-    return fetch('https://rest-api-treehouse-project-9.herokuapp.com/api/users', info)
-      .then(data => data.ok ? false : data.json())
-      .then(error => {
-        if (error)
-          throw error;
-      });
+      }),
+      responseType: 'text' as 'text'
+    }
+    return this.http.post('https://rest-api-treehouse-project-9.herokuapp.com/api/users', body, httpOptions )
   }
 
   public signOut(): void {

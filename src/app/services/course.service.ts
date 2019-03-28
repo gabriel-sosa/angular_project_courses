@@ -1,75 +1,58 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { UserService } from './user.service';
 import { Course } from '../interfaces/course.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private http: HttpClient
+  ) { }
 
-  public getCourses(): Promise<any> {
-    return fetch("https://rest-api-treehouse-project-9.herokuapp.com/api/courses")
-      .then(data => data.json());
+  public getCourses(): Observable<any> {
+    return this.http.get("https://rest-api-treehouse-project-9.herokuapp.com/api/courses")
   }
 
-  public getCourse(id: string): Promise<any> {
-    return fetch(`https://rest-api-treehouse-project-9.herokuapp.com/api/courses/${id}`)
-      .then(data => data.json());
+  public getCourse(id: string): Observable<any> {
+    return this.http.get(`https://rest-api-treehouse-project-9.herokuapp.com/api/courses/${id}`)
   }
 
-  public createCourse(body: Course): Promise<any>{
+  public createCourse(body: Course): Observable<any>{
     const user = this.userService.getUser().info.headers.Authorization;
-    const info = {
-      method: 'POST',
-      headers: {
+    const httpOptions = {
+      headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: user.toString()
-      },
-      body: JSON.stringify(body)
+        Authorization: user
+      }),
+      responseType: 'text' as 'text'
     };
-    return fetch('https://rest-api-treehouse-project-9.herokuapp.com/api/courses', info)
-      .then(data => data.ok ? false : data.json())
-      .then(error => {
-        if (error)
-          throw error;
-    });
+    return this.http.post('https://rest-api-treehouse-project-9.herokuapp.com/api/courses', body, httpOptions);
   }
 
-  public updateCourse(body: Course): Promise<any> {
+  public updateCourse(body: Course): Observable<any> {
     const user = this.userService.getUser().info.headers.Authorization;
-    const info = {
-      method: 'PUT',
-      headers: {
+    const httpOptions = {
+      headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: user.toString()
-      },
-      body: JSON.stringify(body)
+        Authorization: user
+      })
     };
-    return fetch(`https://rest-api-treehouse-project-9.herokuapp.com/api/courses/${body._id}`, info)
-      .then(data => data.ok ? false : data.json())
-      .then(error => {
-        if (error)
-          throw error;
-      });
+    return this.http.put(`https://rest-api-treehouse-project-9.herokuapp.com/api/courses/${body._id}`, body, httpOptions);
   }
 
-  public deleteCourse(id: String): Promise<any> {
+  public deleteCourse(id: String): Observable<any> {
     const currentUser = this.userService.getUser().info.headers.Authorization;
-    const info = {
-      method: 'DELETE',
-      headers: {
-        Authorization: currentUser.toString()
-      }
-    }
-    return fetch(`https://rest-api-treehouse-project-9.herokuapp.com/api/courses/${id}`, info)
-      .then(data => {
-        if (data.ok) 
-          return;
-        else
-          throw new Error();
-      });
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: currentUser
+      })
+    };
+    return this.http.delete(`https://rest-api-treehouse-project-9.herokuapp.com/api/courses/${id}`, httpOptions);
   }
 }
