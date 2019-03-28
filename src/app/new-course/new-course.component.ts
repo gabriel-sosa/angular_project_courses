@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 import { UserService } from '../services/user.service';
 import { CourseService } from '../services/course.service';
@@ -12,7 +13,7 @@ import { CourseService } from '../services/course.service';
 })
 export class NewCourseComponent implements OnInit {
 
-  customError: String;
+  loading: Boolean = false;
 
   course = new FormGroup({
     title: new FormControl('', [
@@ -26,7 +27,8 @@ export class NewCourseComponent implements OnInit {
   constructor(
     private userService: UserService,
     private courseService: CourseService,
-    private router: Router
+    private router: Router,
+    private sanckNar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -36,10 +38,15 @@ export class NewCourseComponent implements OnInit {
   }
 
   onSubmit(){
-    if(this.course.valid)
+    if(this.course.valid && !this.loading){
+      this.loading = true;
       this.courseService.createCourse(this.course.value)
         .then(() => this.router.navigate(['/']))
-        .catch(err => this.customError = err.message);
+        .catch(err => {
+          this.loading = false;
+          this.sanckNar.open(err.message, 'ok');
+        });
+    }
   }
 
 }

@@ -1,9 +1,11 @@
-<div *ngIf="course">
+<mat-card *ngIf="course">
+  <mat-card-title><strong>{{course.title}}</strong> by {{course.user.emailAddress}}</mat-card-title>
   <div *ngIf="currentUser && currentUser.emailAddress === course.user.emailAddress">
-      <a routerLink="/course/{{course._id}}/update">Update</a>
-      <a (click)="handleDelete()">delete</a>
+      <a mat-button routerLink="/course/{{course._id}}/update">Update</a>
+      <a mat-button (click)="handleDelete()">delete</a>
   </div>
-  <h1>{{course.title}}</h1>
-  <h3>by {{course.user.emailAddress}}</h3>
-  <h2>{{course.description}}</h2>
-</div>
+  <mat-card-content>
+    <p>{{course.description}}</p>
+  </mat-card-content>
+</mat-card>
+<mat-spinner *ngIf="!course"></mat-spinner>

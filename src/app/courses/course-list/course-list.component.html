@@ -1,8 +1,18 @@
-<div *ngIf="courses">
-    <div *ngFor="let course of courses">
-        <app-course title={{course.title}} id={{course._id}}></app-course>
-    </div>
-</div>
-<a routerLink="/new">
-    <h3>Create New Course</h3>
-</a>
+<mat-card>
+    <mat-card-title>Courses</mat-card-title>
+    <mat-card-content>
+        <div *ngIf="courses">
+            
+            <app-course *ngFor="let course of courses" title={{course.title}} author={{course.user.firstName}} id={{course._id}}></app-course>
+            
+        </div>
+
+        <mat-spinner *ngIf="!courses"></mat-spinner>
+
+        <a mat-button routerLink="/new">
+            <h2>Create</h2>
+            <h3>New Course</h3>
+        </a>
+
+    </mat-card-content>
+</mat-card>

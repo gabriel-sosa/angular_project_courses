@@ -1,18 +1,37 @@
 <h1>Update Course</h1>
+<mat-card>
+  <mat-card-title>Update Course</mat-card-title>
+  <mat-card-content>
+      <form [formGroup]="course" (ngSubmit)="onSubmit()">
 
-<form [formGroup]="course" (ngSubmit)="onSubmit()">
+          <input type="hidden" name="id" formControlName="_id">
 
-  <input type="hidden" name="id" formControlName="_id">
+          <mat-list>
+            <mat-list-item>
+              <mat-form-field>
+                  <input matInput type="text" placeholder="Title" formControlName="title">
+                  <mat-error>
+                    Title is required
+                  </mat-error>
+              </mat-form-field>
+            </mat-list-item>
 
-  <label>
-    Title:
-    <input type="text" name="title" formControlName="title">
-  </label>
+            <mat-list-item>
+              <mat-form-field>
+                <textarea matInput placeholder="Description" formControlName="description"></textarea>
+                <mat-error>
+                  Description is required
+                </mat-error>
+              </mat-form-field>
+            </mat-list-item>
+          </mat-list>
 
-  <label>
-    Description:
-    <textarea name="description" cols="30" rows="10" formControlName="description"></textarea>
-  </label>
+        
+          <mat-list-item>
+              <button *ngIf="!loading" mat-button [disabled]="course.invalid">Update Course</button>
+              <mat-spinner *ngIf="loading"></mat-spinner>
+          </mat-list-item>
 
-  <input type="submit" value="Update Course">
-</form>
+      </form>
+  </mat-card-content>
+</mat-card>

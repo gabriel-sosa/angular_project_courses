@@ -7,9 +7,11 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CourseComponent implements OnInit {
 
-  @Input() title: string;
+  @Input() title: String;
 
-  @Input() id: string;
+  @Input() id: String;
+
+  @Input() author: String;
 
   constructor() { }
 

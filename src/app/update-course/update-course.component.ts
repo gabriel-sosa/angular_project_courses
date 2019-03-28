@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 import { CourseService } from '../services/course.service';
 import { UserService } from '../services/user.service';
@@ -12,17 +13,28 @@ import { UserService } from '../services/user.service';
 })
 export class UpdateCourseComponent implements OnInit {
 
+  loading: Boolean = false;
+
   course = new FormGroup({
-    _id: new FormControl(''),
-    title: new FormControl(''),
-    description: new FormControl(''),
+    _id: new FormControl('', [
+      Validators.required,
+    ]),
+    title: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4)
+    ]),
+    description: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4)
+    ]),
   });
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private courseService: CourseService,
-    private userService: UserService
+    private userService: UserService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -39,13 +51,18 @@ export class UpdateCourseComponent implements OnInit {
         title: data.title,
         description: data.description
       }))
-      .catch(err => console.log(err));
+      .catch(err => err.message && this.snackBar.open(err, 'ok'));
   }
 
   onSubmit() {
-    this.courseService.updateCourse(this.course.value)
-      .then(() => this.router.navigate([`/course/${this.course.value._id}`]))
-      .catch(err => console.log(err));
+    if (this.course.valid && !this.loading) {
+      this.courseService.updateCourse(this.course.value)
+        .then(() => this.router.navigate([`/course/${this.course.value._id}`]))
+        .catch(err => {
+          this.snackBar.open(err.message, 'ok');
+          this.loading = false;
+        });
+    }
   }
 
 }

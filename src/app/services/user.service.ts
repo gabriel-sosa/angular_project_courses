@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { User } from '../interfaces/user.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ export class UserService {
 
   user: User
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   public signIn({email, password}): Promise<any>{
     const authorization = 'Basic ' + btoa(`${email}:${password}`);
@@ -35,20 +37,6 @@ export class UserService {
       });
   }
 
-  private validateUserSignUp(user: User): any {
-    return new Promise((resolve, reject) => {
-      //if (!(user.firstName && /^[A-Za-z]+$/.test(user.firstName)))
-      //  return reject({message: 'invalid first name'});
-      // if (!(user.lastName && /^[A-Za-z]+$/.test(user.lastName)))
-      //   return reject({message: 'invalid last name'});
-      // if (!(user.emailAddress && /^.+@.+\..+$/.test(user.emailAddress)))
-      //   return reject({message: 'invalid email'});
-      // if (!user.password)
-      //   return reject({message: 'insert a password'});
-      resolve();
-    })
-  }
-
   public signUp(body: User): Promise<any> {
     const info = {
       method: 'POST', 
@@ -57,8 +45,7 @@ export class UserService {
         'Content-Type': 'application/json'
       }
     };
-    return this.validateUserSignUp(body)
-      .then(() => fetch('https://rest-api-treehouse-project-9.herokuapp.com/api/users', info))
+    return fetch('https://rest-api-treehouse-project-9.herokuapp.com/api/users', info)
       .then(data => data.ok ? false : data.json())
       .then(error => {
         if (error)

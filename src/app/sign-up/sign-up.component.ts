@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 import { UserService } from '../services/user.service';
 import { validator } from '../validator.function';
-
-
 
 @Component({
   selector: 'app-sign-up',
@@ -14,7 +13,7 @@ import { validator } from '../validator.function';
 })
 export class SignUpComponent implements OnInit {
 
-  customError: String;
+  loading: boolean = false;
 
   user = new FormGroup({
     firstName: new FormControl('', [
@@ -40,15 +39,19 @@ export class SignUpComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) { }
 
   onSubmit(){
-    console.log(this.user.controls.firstName.valid)
-    if (this.user.valid) {
+    if (this.user.valid && !this.loading) {
+      this.loading = true;
       this.userService.signUp(this.user.value)
         .then(() => this.router.navigate(['/signin']))
-        .catch(err => this.customError = err.message);
+        .catch(err => {
+          this.snackBar.open(err.message, 'ok');
+          this.loading = false;
+        });
     }
   }
 

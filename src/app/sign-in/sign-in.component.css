@@ -1,11 +1,8 @@
-input.ng-valid {
-    border: 2px solid green;
+mat-card {
+    width: 300px;
+    margin: 0 auto;
 }
 
-input.ng-invalid {
-    border: 2px solid red;
-}
-
-input.ng-untouched {
-    border: 2px solid grey;
+mat-list-item {
+    margin: 16px auto;
 }

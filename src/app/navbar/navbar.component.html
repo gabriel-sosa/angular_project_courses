@@ -1,11 +1,14 @@
-<nav [@openClose]="navbarOpen ?  'open' : 'close' ">
-  <h3 (click)="toggleNavbar()" >>></h3>
-  <a routerLink="/"><h2>Courses</h2></a> 
-  <div *ngIf="!userService.getUser()">
-    <a routerLink="/signup">Sign Up</a>
-    <a routerLink="/signin">Sign In</a>
-  </div>
-  <div *ngIf="userService.getUser()">
-    <a (click)="onClick()">Sign Out</a>
-  </div>
-</nav>
+<mat-list>
+  <mat-list-item>
+      <a mat-button routerLink="/">Courses</a> 
+  </mat-list-item>
+  <mat-list-item *ngIf="!userService.getUser()">
+    <a mat-button routerLink="/signup">Sign Up</a>
+  </mat-list-item>
+  <mat-list-item *ngIf="!userService.getUser()">
+    <a mat-button routerLink="/signin">Sign In</a>
+  </mat-list-item>
+  <mat-list-item *ngIf="userService.getUser()">
+    <a mat-button (click)="onClick()">Sign Out</a>
+  </mat-list-item>
+</mat-list>
